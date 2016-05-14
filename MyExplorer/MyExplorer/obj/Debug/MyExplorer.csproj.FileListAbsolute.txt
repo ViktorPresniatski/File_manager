@@ -1,0 +1,9 @@
+D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\bin\Debug\MyExplorer.exe.config
+D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\bin\Debug\MyExplorer.exe
+D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\bin\Debug\MyExplorer.pdb
+D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\obj\Debug\MyExplorer.csprojResolveAssemblyReference.cache
+D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\obj\Debug\MyExplorer.Properties.Resources.resources
+D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\obj\Debug\MyExplorer.csproj.GenerateResource.Cache
+D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\obj\Debug\MyExplorer.exe
+D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\obj\Debug\MyExplorer.pdb
+D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\obj\Debug\MyExplorer.ExplorerForm.resources
