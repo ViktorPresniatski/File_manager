@@ -82,8 +82,8 @@ namespace MyExplorer
             lvFiles.Clear();        // чистим весь лист и создаем шапку
             lvFiles.Columns.Add("Имя", 150);
             lvFiles.Columns.Add("Дата изменения", 150);
-            lvFiles.Columns.Add("Тип", 75);
-            lvFiles.Columns.Add("Размер", 150);
+            lvFiles.Columns.Add("Тип", 85);
+            lvFiles.Columns.Add("Размер", 100);
         }
 
         public static string GetAdressPath(string str)

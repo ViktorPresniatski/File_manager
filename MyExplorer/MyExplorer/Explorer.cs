@@ -121,17 +121,14 @@ namespace MyExplorer
 
                 if (nodeCurrent.Nodes.Count == 0)          // чтобы не перезагружать по сто раз
                     PopulateLevelDirectoryTree(nodeCurrent, 1);
-
                 return true;
             }
         }
 
-        public void PopulateFiles(string path, ListView lvFiles)
+        private void BuildListView(ListView lvFiles, string[] stringDirectories, string[] stringFiles)
         {
             var lvData = new string[4];
-            
             DateTime modifyDate;
-            string[] stringDirectories = Directory.GetDirectories(path);
 
             Info.InitListView(lvFiles);    // очистить список
             foreach (string stringDir in stringDirectories)
@@ -146,8 +143,6 @@ namespace MyExplorer
                 lvFiles.Items.Add(lvItem);
             }
 
-            string[] stringFiles = Directory.GetFiles(path);
-
             foreach (string stringFile in stringFiles)
             {
                 var objFileSize = new FileInfo(stringFile);
@@ -160,6 +155,14 @@ namespace MyExplorer
                 var lvItem = new ListViewItem(lvData, 4);
                 lvFiles.Items.Add(lvItem);
             }
+        }
+
+        public void PopulateFullFiles(string path, ListView lvFiles)
+        {
+            string[] stringDirectories = Directory.GetDirectories(path);
+            string[] stringFiles = Directory.GetFiles(path);
+            BuildListView(lvFiles, stringDirectories, stringFiles);
+
         }
 
         public bool GetDriveList(ListView lvFiles)
@@ -183,7 +186,7 @@ namespace MyExplorer
                 if (path == "\\")
                     PopulateDriveList(lvFiles);
                 else
-                    PopulateFiles(path, lvFiles);
+                    PopulateFullFiles(path, lvFiles);
                 pointCurrentPath--;
             }
             catch (Exception e)
@@ -199,7 +202,7 @@ namespace MyExplorer
             try
             {
                 if (pointCurrentPath >= 0 && path == CurrentPath) return false;
-                PopulateFiles(path, lvFiles);
+                PopulateFullFiles(path, lvFiles);
                 int count = collectionPath.Count;
                 int start = pointCurrentPath + 1;
                 collectionPath.RemoveRange(start, count - start);
@@ -222,7 +225,7 @@ namespace MyExplorer
                 if (path == "\\")
                     PopulateDriveList(lvFiles);
                 else
-                    PopulateFiles(path, lvFiles);
+                    PopulateFullFiles(path, lvFiles);
                 pointCurrentPath++;
             }
             catch (Exception e)
@@ -231,6 +234,20 @@ namespace MyExplorer
                 return false;
             }
             return (pointCurrentPath == collectionPath.Count - 1) ? true : false;
+        }
+
+        public bool GetUpDirectory(ListView lvFiles)
+        {
+            string lastPath = collectionPath[pointCurrentPath];
+            string path = lastPath.Replace("\\" + Info.GetPathName(lastPath), "");
+            if (path.Length == 2)
+            {
+                GetDriveList(lvFiles);
+                return false;
+            }
+            else
+                GetCurrentDirectory(path, lvFiles);
+            return true;
         }
     }
 }

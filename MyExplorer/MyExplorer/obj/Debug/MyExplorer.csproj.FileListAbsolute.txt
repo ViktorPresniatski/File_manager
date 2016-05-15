@@ -7,3 +7,12 @@ D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\obj\Debug\MyExp
 D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\obj\Debug\MyExplorer.exe
 D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\obj\Debug\MyExplorer.pdb
 D:\Учёба\ОАиП\C#\Курсовая\MyExplorer\MyExplorer\obj\Debug\MyExplorer.ExplorerForm.resources
+D:\course_work\MyExplorer\MyExplorer\bin\Debug\MyExplorer.exe.config
+D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.exe
+D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.pdb
+D:\course_work\MyExplorer\MyExplorer\bin\Debug\MyExplorer.exe
+D:\course_work\MyExplorer\MyExplorer\bin\Debug\MyExplorer.pdb
+D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.csprojResolveAssemblyReference.cache
+D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.ExplorerForm.resources
+D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.Properties.Resources.resources
+D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.csproj.GenerateResource.Cache
