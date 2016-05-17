@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
-
+using Microsoft.VisualBasic.FileIO;
 
 namespace MyExplorer
 {
@@ -11,6 +11,8 @@ namespace MyExplorer
         private int pointCurrentPath = -1;
         private List<string> collectionPath = new List<string>();
         private int countDrive;
+
+        public buffer Buffer = new buffer();
 
         public string CurrentPath
         {
@@ -32,9 +34,9 @@ namespace MyExplorer
             TreeNodeCollection nodeCollection = nodeTreeBase.Nodes;   // установить колекцию узлов
 
             foreach (var drive in allDrives)
-            { 
+            {
                 int imageIndex = Info.SwitchDriveType(drive.DriveType.ToString());
-               
+
                 TreeNode nodeTree = new TreeNode(string.Format("{0}", drive.Name), imageIndex, imageIndex);   // создать новый узел диска
                 nodeCollection.Add(nodeTree); // добавить новый узел
                 countDrive++;
@@ -109,12 +111,7 @@ namespace MyExplorer
         public bool PopulateDirectoryTree(TreeNode nodeCurrent, ListView lvFiles)
         {
             string path = Info.GetFullPath(nodeCurrent.FullPath);
-            if (Directory.Exists(path) == false)           // проверить путь
-            {
-                MessageBox.Show("Directory or path " + nodeCurrent + " does not exist.");
-                return false;
-            }
-            else
+            try
             {
                 bool flag = GetCurrentDirectory(path, lvFiles);
                 if (!flag) return false;
@@ -123,37 +120,10 @@ namespace MyExplorer
                     PopulateLevelDirectoryTree(nodeCurrent, 1);
                 return true;
             }
-        }
-
-        private void BuildListView(ListView lvFiles, string[] stringDirectories, string[] stringFiles)
-        {
-            var lvData = new string[4];
-            DateTime modifyDate;
-
-            Info.InitListView(lvFiles);    // очистить список
-            foreach (string stringDir in stringDirectories)
+            catch (Exception e)
             {
-                string stringPathName = Info.GetPathName(stringDir);
-                modifyDate = Directory.GetLastWriteTime(Info.GetFullPath(stringDir));
-                lvData[0] = Info.GetPathName(stringDir);
-                lvData[1] = Info.FormatDate(modifyDate);
-                lvData[2] = "Папка с файлами";
-                lvData[3] = "";
-                var lvItem = new ListViewItem(lvData, 3);
-                lvFiles.Items.Add(lvItem);
-            }
-
-            foreach (string stringFile in stringFiles)
-            {
-                var objFileSize = new FileInfo(stringFile);
-                Int64 fileSize = objFileSize.Length;
-                modifyDate = objFileSize.LastWriteTime;
-                lvData[0] = Info.GetPathName(stringFile);
-                lvData[1] = Info.FormatDate(modifyDate);
-                lvData[2] = "Файл";
-                lvData[3] = Info.FormatSize(fileSize);
-                var lvItem = new ListViewItem(lvData, 4);
-                lvFiles.Items.Add(lvItem);
+                MessageBox.Show(e.Message);
+                return false;
             }
         }
 
@@ -161,7 +131,7 @@ namespace MyExplorer
         {
             string[] stringDirectories = Directory.GetDirectories(path);
             string[] stringFiles = Directory.GetFiles(path);
-            BuildListView(lvFiles, stringDirectories, stringFiles);
+            Info.BuildListView(lvFiles, stringDirectories, stringFiles);
 
         }
 
@@ -173,6 +143,9 @@ namespace MyExplorer
                 if (flag) return false;
             PopulateDriveList(lvFiles);
             if (flag) return false;
+            int count = collectionPath.Count;
+            int start = pointCurrentPath + 1;
+            collectionPath.RemoveRange(start, count - start);
             collectionPath.Add("\\");
             pointCurrentPath++;
             return true;
@@ -238,7 +211,7 @@ namespace MyExplorer
 
         public bool GetUpDirectory(ListView lvFiles)
         {
-            string lastPath = collectionPath[pointCurrentPath];
+            string lastPath = CurrentPath;
             string path = lastPath.Replace("\\" + Info.GetPathName(lastPath), "");
             if (path.Length == 2)
             {
@@ -248,6 +221,37 @@ namespace MyExplorer
             else
                 GetCurrentDirectory(path, lvFiles);
             return true;
+        }
+
+        private string GetTargetPath(ListView lvFiles)
+        {
+            string fileName = Info.GetPathName(this.Buffer.path);      // имя файла или папки
+            string target;
+            if (ReferenceEquals(lvFiles.FocusedItem, null))      // вычисляем новый адрес
+                target = this.CurrentPath + "\\" + fileName;
+            else
+                target = this.CurrentPath + "\\" + lvFiles.FocusedItem.Text + "\\" + fileName;
+            return target;
+        }
+
+        public void Move(ListView lvFiles)
+        {
+            try
+            {
+                string nameItem = GetTargetPath(lvFiles);
+                if (File.Exists(this.Buffer.path))
+                    FileSystem.MoveFile(this.Buffer.path, nameItem, UIOption.AllDialogs);
+                else
+                    FileSystem.MoveDirectory(this.Buffer.path, nameItem, UIOption.AllDialogs);
+                var item = Info.BuildListViewItem(lvFiles, nameItem);
+                item.Selected = true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            this.Buffer.path = "";
+            this.Buffer.operation = Operation.none;
         }
     }
 }

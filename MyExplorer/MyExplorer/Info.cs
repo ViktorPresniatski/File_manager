@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MyExplorer
 {
-    static class Info
-    {
+    class Info
+    {    
         public static string GetFullPath(string stringPath)
         {
             string stringParse = stringPath.Replace("My Computer\\", "");
@@ -84,6 +85,52 @@ namespace MyExplorer
             lvFiles.Columns.Add("Дата изменения", 150);
             lvFiles.Columns.Add("Тип", 85);
             lvFiles.Columns.Add("Размер", 100);
+        }
+
+        public static ListViewItem BuildListViewItem(ListView lvFiles, string itemPath)
+        {
+            var lvData = new string[4];
+            DateTime modifyDate;
+            ListViewItem lvItem;
+
+            if (File.Exists(itemPath))
+            {
+                var objFileSize = new FileInfo(itemPath);
+                Int64 fileSize = objFileSize.Length;
+                modifyDate = objFileSize.LastWriteTime;
+                lvData[0] = Info.GetPathName(itemPath);
+                lvData[1] = Info.FormatDate(modifyDate);
+                lvData[2] = "Файл";
+                lvData[3] = Info.FormatSize(fileSize);
+                lvItem = new ListViewItem(lvData, 4);
+                lvFiles.Items.Add(lvItem);
+            }
+            else
+            {
+                string stringPathName = Info.GetPathName(itemPath);
+                modifyDate = Directory.GetLastWriteTime(Info.GetFullPath(itemPath));
+                lvData[0] = Info.GetPathName(itemPath);
+                lvData[1] = Info.FormatDate(modifyDate);
+                lvData[2] = "Папка с файлами";
+                lvData[3] = "";
+                lvItem = new ListViewItem(lvData, 3);
+                lvFiles.Items.Add(lvItem);
+            }
+            return lvItem;
+        }
+
+        public static void BuildListView(ListView lvFiles, string[] stringDirectories, string[] stringFiles)
+        {
+            Info.InitListView(lvFiles);    // очистить список
+            foreach (string stringDir in stringDirectories)
+            {
+                BuildListViewItem(lvFiles, stringDir);
+            }
+
+            foreach (string stringFile in stringFiles)
+            {
+                BuildListViewItem(lvFiles, stringFile);
+            }
         }
 
         public static string GetAdressPath(string str)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -90,10 +91,9 @@ namespace MyExplorer
         {
             Cursor = Cursors.WaitCursor;
             bool flag = exp.GetUpDirectory(lvFiles);
-            if (flag)
-                toolForward.Enabled = true;
-            else
+            if (!flag)
                 toolUp.Enabled = false;
+            toolForward.Enabled = false;     
             adressString.Text = Info.GetAdressPath(exp.CurrentPath);
             Cursor = Cursors.Default;
         }
@@ -157,7 +157,7 @@ namespace MyExplorer
                     Cursor = Cursors.Default;
                     return;
                 }
-                if (path.Contains(".") == false)
+                if (File.Exists(path))
                     flag = exp.GetCurrentDirectory(path, lvFiles);
                 else
                 {
@@ -180,6 +180,24 @@ namespace MyExplorer
         {
             if (!ReferenceEquals(lvFiles.FocusedItem, null))
                 Open(lvFiles.FocusedItem.Text);
+        }
+
+        private void вырезатьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!ReferenceEquals(lvFiles.FocusedItem, null))
+            {
+                string rememberPath = adressString.Text + "\\" + lvFiles.FocusedItem.Text;
+                exp.Buffer.path = rememberPath;
+                exp.Buffer.operation = Operation.move;
+                MessageBox.Show("запомнили путь " + rememberPath);
+            }
+        }
+
+        private void вставитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (exp.Buffer.path != "" && exp.Buffer.operation == Operation.move)   // узнаём, какую операцию использовали;
+                exp.Move(lvFiles);
+            
         }
     }
 }
