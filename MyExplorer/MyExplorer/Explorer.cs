@@ -132,7 +132,6 @@ namespace MyExplorer
             string[] stringDirectories = Directory.GetDirectories(path);
             string[] stringFiles = Directory.GetFiles(path);
             Info.BuildListView(lvFiles, stringDirectories, stringFiles);
-
         }
 
         public bool GetDriveList(ListView lvFiles)
@@ -223,35 +222,49 @@ namespace MyExplorer
             return true;
         }
 
-        private string GetTargetPath(ListView lvFiles)
+        
+
+        public void Move(string sourcePath, string targetPath)
         {
-            string fileName = Info.GetPathName(this.Buffer.path);      // имя файла или папки
-            string target;
-            if (ReferenceEquals(lvFiles.FocusedItem, null))      // вычисляем новый адрес
-                target = this.CurrentPath + "\\" + fileName;
+            //string nameItem = GetTargetPath(lvFiles); 
+            if (File.Exists(sourcePath))
+                FileSystem.MoveFile(sourcePath, targetPath, UIOption.AllDialogs);
             else
-                target = this.CurrentPath + "\\" + lvFiles.FocusedItem.Text + "\\" + fileName;
-            return target;
+                FileSystem.MoveDirectory(sourcePath, targetPath, UIOption.AllDialogs);
+
+           
+            //if (ReferenceEquals(lvFiles.FocusedItem, null) || !lvFiles.FocusedItem.Selected)
+            //{
+            //    var item = Info.BuildListViewItem(lvFiles, nameItem);      
+            //    item.Selected = true;
+            //}
+            Buffer.pathColl.Remove(sourcePath);
+            if (Buffer.pathColl.Count == 0)
+                Buffer.operation = Operation.none;
         }
 
-        public void Move(ListView lvFiles)
+        public void Copy(string sourcePath, string targetPath)
         {
-            try
-            {
-                string nameItem = GetTargetPath(lvFiles);
-                if (File.Exists(this.Buffer.path))
-                    FileSystem.MoveFile(this.Buffer.path, nameItem, UIOption.AllDialogs);
-                else
-                    FileSystem.MoveDirectory(this.Buffer.path, nameItem, UIOption.AllDialogs);
-                var item = Info.BuildListViewItem(lvFiles, nameItem);
-                item.Selected = true;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            this.Buffer.path = "";
-            this.Buffer.operation = Operation.none;
+            //string nameItem = GetTargetPath(lvFiles);
+            if (File.Exists(sourcePath))
+                FileSystem.CopyFile(sourcePath, targetPath, UIOption.AllDialogs);
+            else
+                FileSystem.CopyDirectory(sourcePath, targetPath, UIOption.AllDialogs);
+           
+            
+            //if (ReferenceEquals(lvFiles.FocusedItem, null) || !lvFiles.FocusedItem.Selected)
+            //{
+            //    var item = Info.BuildListViewItem(lvFiles, nameItem);       // для тривью немного по другому
+            //    item.Selected = true;
+            //}
+        }
+
+        public void Delete(string target) // здесь должен быть массив
+        { 
+            if (File.Exists(target))
+                FileSystem.DeleteFile(target, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+            else
+                FileSystem.DeleteDirectory(target, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace MyExplorer
 {
@@ -6,7 +6,9 @@ namespace MyExplorer
 
     class buffer
     {  
-        public string path;
+        public List<string> pathColl = new List<string>();
         public Operation operation;
+
+        public bool Empty { get { return pathColl.Count == 0; } }
     }
 }

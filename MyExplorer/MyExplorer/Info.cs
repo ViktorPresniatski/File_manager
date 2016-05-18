@@ -140,5 +140,16 @@ namespace MyExplorer
             else
                 return str;
         }
+
+        public static string GetTargetPath(ListView lvFiles, Explorer exp, string fullPath)
+        {
+            string fileName = Info.GetPathName(fullPath);      // имя файла или папки
+            string target;
+            if (!ReferenceEquals(lvFiles.FocusedItem, null) && lvFiles.FocusedItem.Selected)      // вычисляем новый адрес
+                target = exp.CurrentPath + "\\" + lvFiles.FocusedItem.Text + "\\" + fileName;
+            else
+                target = exp.CurrentPath + "\\" + fileName;
+            return target;
+        }
     }
 }
