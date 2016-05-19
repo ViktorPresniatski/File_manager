@@ -36,20 +36,20 @@
             this.lvFiles = new System.Windows.Forms.ListView();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmOpenInNewWindow = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.cmCut = new System.Windows.Forms.ToolStripMenuItem();
             this.cmCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.cmPast = new System.Windows.Forms.ToolStripMenuItem();
             this.cmDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.cmRename = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmCreate = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmProperty = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolBack = new System.Windows.Forms.ToolStripMenuItem();
             this.toolForward = new System.Windows.Forms.ToolStripMenuItem();
             this.toolUp = new System.Windows.Forms.ToolStripMenuItem();
             this.adressString = new System.Windows.Forms.TextBox();
-            this.cmRefresh = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmCreate = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmProperty = new System.Windows.Forms.ToolStripMenuItem();
-            this.открытьВНовомОкнеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -107,7 +107,7 @@
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmOpen,
-            this.открытьВНовомОкнеToolStripMenuItem,
+            this.cmOpenInNewWindow,
             this.cmRefresh,
             this.cmCut,
             this.cmCopy,
@@ -124,14 +124,27 @@
             // 
             this.cmOpen.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.cmOpen.Name = "cmOpen";
-            this.cmOpen.Size = new System.Drawing.Size(161, 22);
+            this.cmOpen.Size = new System.Drawing.Size(198, 22);
             this.cmOpen.Text = "Открыть";
             this.cmOpen.Click += new System.EventHandler(this.открытьToolStripMenuItem_Click);
+            // 
+            // cmOpenInNewWindow
+            // 
+            this.cmOpenInNewWindow.Name = "cmOpenInNewWindow";
+            this.cmOpenInNewWindow.Size = new System.Drawing.Size(198, 22);
+            this.cmOpenInNewWindow.Text = "Открыть в новом окне";
+            this.cmOpenInNewWindow.Click += new System.EventHandler(this.открытьВНовомОкнеToolStripMenuItem_Click);
+            // 
+            // cmRefresh
+            // 
+            this.cmRefresh.Name = "cmRefresh";
+            this.cmRefresh.Size = new System.Drawing.Size(198, 22);
+            this.cmRefresh.Text = "Обновить";
             // 
             // cmCut
             // 
             this.cmCut.Name = "cmCut";
-            this.cmCut.Size = new System.Drawing.Size(161, 22);
+            this.cmCut.Size = new System.Drawing.Size(198, 22);
             this.cmCut.Text = "Вырезать";
             this.cmCut.Click += new System.EventHandler(this.вырезатьToolStripMenuItem_Click);
             // 
@@ -145,7 +158,7 @@
             // cmPast
             // 
             this.cmPast.Name = "cmPast";
-            this.cmPast.Size = new System.Drawing.Size(161, 22);
+            this.cmPast.Size = new System.Drawing.Size(198, 22);
             this.cmPast.Text = "Вставить";
             this.cmPast.Click += new System.EventHandler(this.вставитьToolStripMenuItem_Click);
             // 
@@ -159,8 +172,20 @@
             // cmRename
             // 
             this.cmRename.Name = "cmRename";
-            this.cmRename.Size = new System.Drawing.Size(161, 22);
+            this.cmRename.Size = new System.Drawing.Size(198, 22);
             this.cmRename.Text = "Переименовать";
+            // 
+            // cmCreate
+            // 
+            this.cmCreate.Name = "cmCreate";
+            this.cmCreate.Size = new System.Drawing.Size(198, 22);
+            this.cmCreate.Text = "Создать";
+            // 
+            // cmProperty
+            // 
+            this.cmProperty.Name = "cmProperty";
+            this.cmProperty.Size = new System.Drawing.Size(198, 22);
+            this.cmProperty.Text = "Свойства";
             // 
             // menuStrip1
             // 
@@ -210,30 +235,6 @@
             this.adressString.TabIndex = 4;
             this.adressString.KeyDown += new System.Windows.Forms.KeyEventHandler(this.adressString_KeyDown);
             // 
-            // cmRefresh
-            // 
-            this.cmRefresh.Name = "cmRefresh";
-            this.cmRefresh.Size = new System.Drawing.Size(161, 22);
-            this.cmRefresh.Text = "Обновить";
-            // 
-            // cmCreate
-            // 
-            this.cmCreate.Name = "cmCreate";
-            this.cmCreate.Size = new System.Drawing.Size(161, 22);
-            this.cmCreate.Text = "Создать";
-            // 
-            // cmProperty
-            // 
-            this.cmProperty.Name = "cmProperty";
-            this.cmProperty.Size = new System.Drawing.Size(161, 22);
-            this.cmProperty.Text = "Свойства";
-            // 
-            // открытьВНовомОкнеToolStripMenuItem
-            // 
-            this.открытьВНовомОкнеToolStripMenuItem.Name = "открытьВНовомОкнеToolStripMenuItem";
-            this.открытьВНовомОкнеToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.открытьВНовомОкнеToolStripMenuItem.Text = "Открыть в новом окне";
-            // 
             // ExplorerForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -275,7 +276,7 @@
         private System.Windows.Forms.ToolStripMenuItem cmProperty;
         private System.Windows.Forms.ToolStripMenuItem cmCreate;
         private System.Windows.Forms.ToolStripMenuItem cmRefresh;
-        private System.Windows.Forms.ToolStripMenuItem открытьВНовомОкнеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cmOpenInNewWindow;
     }
 }
 

@@ -226,18 +226,11 @@ namespace MyExplorer
 
         public void Move(string sourcePath, string targetPath)
         {
-            //string nameItem = GetTargetPath(lvFiles); 
             if (File.Exists(sourcePath))
                 FileSystem.MoveFile(sourcePath, targetPath, UIOption.AllDialogs);
             else
                 FileSystem.MoveDirectory(sourcePath, targetPath, UIOption.AllDialogs);
 
-           
-            //if (ReferenceEquals(lvFiles.FocusedItem, null) || !lvFiles.FocusedItem.Selected)
-            //{
-            //    var item = Info.BuildListViewItem(lvFiles, nameItem);      
-            //    item.Selected = true;
-            //}
             Buffer.pathColl.Remove(sourcePath);
             if (Buffer.pathColl.Count == 0)
                 Buffer.operation = Operation.none;
@@ -245,18 +238,10 @@ namespace MyExplorer
 
         public void Copy(string sourcePath, string targetPath)
         {
-            //string nameItem = GetTargetPath(lvFiles);
             if (File.Exists(sourcePath))
                 FileSystem.CopyFile(sourcePath, targetPath, UIOption.AllDialogs);
             else
-                FileSystem.CopyDirectory(sourcePath, targetPath, UIOption.AllDialogs);
-           
-            
-            //if (ReferenceEquals(lvFiles.FocusedItem, null) || !lvFiles.FocusedItem.Selected)
-            //{
-            //    var item = Info.BuildListViewItem(lvFiles, nameItem);       // для тривью немного по другому
-            //    item.Selected = true;
-            //}
+                FileSystem.CopyDirectory(sourcePath, targetPath, UIOption.AllDialogs);           
         }
 
         public void Delete(string target) // здесь должен быть массив

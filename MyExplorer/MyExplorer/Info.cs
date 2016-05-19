@@ -146,7 +146,10 @@ namespace MyExplorer
             string fileName = Info.GetPathName(fullPath);      // имя файла или папки
             string target;
             if (!ReferenceEquals(lvFiles.FocusedItem, null) && lvFiles.FocusedItem.Selected)      // вычисляем новый адрес
+            {
                 target = exp.CurrentPath + "\\" + lvFiles.FocusedItem.Text + "\\" + fileName;
+                while (target[0] == '\\') target = target.Remove(0, 1);
+            }
             else
                 target = exp.CurrentPath + "\\" + fileName;
             return target;
