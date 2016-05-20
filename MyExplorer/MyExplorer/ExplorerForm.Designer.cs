@@ -44,6 +44,8 @@
             this.cmDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.cmRename = new System.Windows.Forms.ToolStripMenuItem();
             this.cmCreate = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmCreateFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmCreateFile = new System.Windows.Forms.ToolStripMenuItem();
             this.cmProperty = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolBack = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,6 +103,7 @@
             this.lvFiles.TabIndex = 1;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
+            this.lvFiles.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.lvFiles_AfterLabelEdit);
             this.lvFiles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvFiles_MouseDoubleClick);
             // 
             // contextMenu
@@ -126,27 +129,28 @@
             this.cmOpen.Name = "cmOpen";
             this.cmOpen.Size = new System.Drawing.Size(198, 22);
             this.cmOpen.Text = "Открыть";
-            this.cmOpen.Click += new System.EventHandler(this.открытьToolStripMenuItem_Click);
+            this.cmOpen.Click += new System.EventHandler(this.cmOpen_Click);
             // 
             // cmOpenInNewWindow
             // 
             this.cmOpenInNewWindow.Name = "cmOpenInNewWindow";
             this.cmOpenInNewWindow.Size = new System.Drawing.Size(198, 22);
             this.cmOpenInNewWindow.Text = "Открыть в новом окне";
-            this.cmOpenInNewWindow.Click += new System.EventHandler(this.открытьВНовомОкнеToolStripMenuItem_Click);
+            this.cmOpenInNewWindow.Click += new System.EventHandler(this.cmOpenInNewWindow_Click);
             // 
             // cmRefresh
             // 
             this.cmRefresh.Name = "cmRefresh";
             this.cmRefresh.Size = new System.Drawing.Size(198, 22);
             this.cmRefresh.Text = "Обновить";
+            this.cmRefresh.Click += new System.EventHandler(this.cmRefresh_Click);
             // 
             // cmCut
             // 
             this.cmCut.Name = "cmCut";
             this.cmCut.Size = new System.Drawing.Size(198, 22);
             this.cmCut.Text = "Вырезать";
-            this.cmCut.Click += new System.EventHandler(this.вырезатьToolStripMenuItem_Click);
+            this.cmCut.Click += new System.EventHandler(this.cmMove_Click);
             // 
             // cmCopy
             // 
@@ -160,7 +164,7 @@
             this.cmPast.Name = "cmPast";
             this.cmPast.Size = new System.Drawing.Size(198, 22);
             this.cmPast.Text = "Вставить";
-            this.cmPast.Click += new System.EventHandler(this.вставитьToolStripMenuItem_Click);
+            this.cmPast.Click += new System.EventHandler(this.cmPast_Click);
             // 
             // cmDelete
             // 
@@ -174,18 +178,39 @@
             this.cmRename.Name = "cmRename";
             this.cmRename.Size = new System.Drawing.Size(198, 22);
             this.cmRename.Text = "Переименовать";
+            this.cmRename.Click += new System.EventHandler(this.cmRename_Click);
             // 
             // cmCreate
             // 
+            this.cmCreate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmCreateFolder,
+            this.cmCreateFile});
             this.cmCreate.Name = "cmCreate";
             this.cmCreate.Size = new System.Drawing.Size(198, 22);
             this.cmCreate.Text = "Создать";
+            // 
+            // cmCreateFolder
+            // 
+            this.cmCreateFolder.Image = ((System.Drawing.Image)(resources.GetObject("cmCreateFolder.Image")));
+            this.cmCreateFolder.Name = "cmCreateFolder";
+            this.cmCreateFolder.Size = new System.Drawing.Size(165, 22);
+            this.cmCreateFolder.Text = "Папку";
+            this.cmCreateFolder.Click += new System.EventHandler(this.cmCreateFolder_Click);
+            // 
+            // cmCreateFile
+            // 
+            this.cmCreateFile.Image = ((System.Drawing.Image)(resources.GetObject("cmCreateFile.Image")));
+            this.cmCreateFile.Name = "cmCreateFile";
+            this.cmCreateFile.Size = new System.Drawing.Size(165, 22);
+            this.cmCreateFile.Text = "Текстовый файл";
+            this.cmCreateFile.Click += new System.EventHandler(this.cmCreateFile_Click);
             // 
             // cmProperty
             // 
             this.cmProperty.Name = "cmProperty";
             this.cmProperty.Size = new System.Drawing.Size(198, 22);
             this.cmProperty.Text = "Свойства";
+            this.cmProperty.Click += new System.EventHandler(this.cmProperty_Click);
             // 
             // menuStrip1
             // 
@@ -229,6 +254,9 @@
             // 
             // adressString
             // 
+            this.adressString.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.adressString.Location = new System.Drawing.Point(214, 4);
             this.adressString.Name = "adressString";
             this.adressString.Size = new System.Drawing.Size(471, 20);
@@ -275,8 +303,10 @@
         private System.Windows.Forms.ToolStripMenuItem cmRename;
         private System.Windows.Forms.ToolStripMenuItem cmProperty;
         private System.Windows.Forms.ToolStripMenuItem cmCreate;
-        private System.Windows.Forms.ToolStripMenuItem cmRefresh;
         private System.Windows.Forms.ToolStripMenuItem cmOpenInNewWindow;
+        private System.Windows.Forms.ToolStripMenuItem cmRefresh;
+        private System.Windows.Forms.ToolStripMenuItem cmCreateFolder;
+        private System.Windows.Forms.ToolStripMenuItem cmCreateFile;
     }
 }
 

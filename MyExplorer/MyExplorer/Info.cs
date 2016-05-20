@@ -81,7 +81,7 @@ namespace MyExplorer
         public static void InitListView(ListView lvFiles)
         {
             lvFiles.Clear();        // чистим весь лист и создаем шапку
-            lvFiles.Columns.Add("Имя", 150);
+            lvFiles.Columns.Add("Имя", 180);
             lvFiles.Columns.Add("Дата изменения", 150);
             lvFiles.Columns.Add("Тип", 85);
             lvFiles.Columns.Add("Размер", 100);
@@ -153,6 +153,23 @@ namespace MyExplorer
             else
                 target = exp.CurrentPath + "\\" + fileName;
             return target;
+        }
+
+        public static string GetCountNew(string type, ListView lvFiles)
+        {
+            string str = "";
+            string[] arr;
+            foreach (ListViewItem item in lvFiles.Items)
+                if (item.Text.Contains(type))
+                    str = item.Text;
+            if (str.Contains(type + " ("))
+            {
+                arr = str.Split('(', ')');
+                str = " (" + (int.Parse(arr[1]) + 1).ToString() + ")";
+            }
+            else
+                str = " (1)";
+            return str;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.VisualBasic.FileIO;
 
 namespace MyExplorer
@@ -9,10 +10,10 @@ namespace MyExplorer
     class Explorer
     {
         private int pointCurrentPath = -1;
-        private List<string> collectionPath = new List<string>();
+        private List<string> collectionPath;
         private int countDrive;
 
-        public buffer Buffer = new buffer();
+        public BufferFile Buffer;
 
         public string CurrentPath
         {
@@ -21,6 +22,8 @@ namespace MyExplorer
 
         public Explorer()
         {
+            Buffer.pathColl = new List<string>();
+            collectionPath = new List<string>();
         }
 
         public void PopulateDriveTree(TreeView tvFolders)//
@@ -134,14 +137,14 @@ namespace MyExplorer
             Info.BuildListView(lvFiles, stringDirectories, stringFiles);
         }
 
-        public bool GetDriveList(ListView lvFiles)
+        public bool GetDriveList(ListView lvFiles, bool refresh = false)
         {
             DriveInfo[] allDrives = DriveInfo.GetDrives();
             bool flag = pointCurrentPath >= 0 && CurrentPath == "\\";
             if (allDrives.Length == countDrive) 
-                if (flag) return false;
-            PopulateDriveList(lvFiles);
-            if (flag) return false;
+                if (flag && !refresh) return false;
+            PopulateDriveList(lvFiles);                   // обновить, если изменится количество дисков
+            if (flag && refresh) return false;          // не перезаписывать путь дважды в коллекцию путей  
             int count = collectionPath.Count;
             int start = pointCurrentPath + 1;
             collectionPath.RemoveRange(start, count - start);
@@ -169,12 +172,13 @@ namespace MyExplorer
             return (pointCurrentPath == 0) ? true : false;
         }
 
-        public bool GetCurrentDirectory(string path, ListView lvFiles)
+        public bool GetCurrentDirectory(string path, ListView lvFiles, bool refresh = false)
         {
             try
             {
-                if (pointCurrentPath >= 0 && path == CurrentPath) return false;
+                if (pointCurrentPath >= 0 && path == CurrentPath && !refresh) return false;
                 PopulateFullFiles(path, lvFiles);
+                if (refresh) return false;      // если просто обновились, то не записывать тот же путь в коллекцию
                 int count = collectionPath.Count;
                 int start = pointCurrentPath + 1;
                 collectionPath.RemoveRange(start, count - start);
@@ -222,8 +226,6 @@ namespace MyExplorer
             return true;
         }
 
-        
-
         public void Move(string sourcePath, string targetPath)
         {
             if (File.Exists(sourcePath))
@@ -244,12 +246,62 @@ namespace MyExplorer
                 FileSystem.CopyDirectory(sourcePath, targetPath, UIOption.AllDialogs);           
         }
 
-        public void Delete(string target) // здесь должен быть массив
+        public void Rename(string source, string target)
+        {
+            if (ReferenceEquals(target, null)) return;
+            if (File.Exists(source))
+                FileSystem.RenameFile(source, target);
+            else if (Directory.Exists(source))
+                FileSystem.RenameDirectory(source, target);
+            else
+                throw new Exception("Нельзя переименовать этот элемент, пожалуйста, обновите страницу");
+        }
+
+        public void Delete(string target)
         { 
             if (File.Exists(target))
                 FileSystem.DeleteFile(target, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
             else
                 FileSystem.DeleteDirectory(target, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+            if (Buffer.pathColl.Contains(target)) Buffer.pathColl.Remove(target);
         }
+
+        public void Create(ListView lvFiles, string type, int method)
+        {
+            string str = Info.GetCountNew(type, lvFiles);
+            if (method == 0) str += ".txt";
+            string name = CurrentPath + "\\" + type + str;
+            if (method == 0)
+            {
+                FileStream fl = File.Create(name);
+                ProcessStartInfo pr = new ProcessStartInfo(name);
+                fl.Close();
+            }
+            else
+                Directory.CreateDirectory(name);
+            ListViewItem lvItem = Info.BuildListViewItem(lvFiles, name);
+            lvItem.Focused = true;
+            lvItem.Selected = true;
+        }
+
+        //public void CreateDirectory(ListView lvFiles)
+        //{
+        //    string str = Info.GetCountNew("Новая папка", lvFiles);
+        //    string name = CurrentPath + "\\Новая папка" + str;
+        //    Directory.CreateDirectory(name);
+        //    ListViewItem lvItem = Info.BuildListViewItem(lvFiles, name);
+        //    lvItem.Focused = true;
+        //    lvItem.Selected = true;
+        //}
+
+        //public void CreateFile(ListView lvFiles)
+        //{
+        //    string str = Info.GetCountNew("Новый текстовый файл", lvFiles);
+        //    string name = CurrentPath + "\\Новый текстовый файл" + str + ".txt";
+        //    File.CreateText(name);
+        //    ListViewItem lvItem = Info.BuildListViewItem(lvFiles, name);
+        //    lvItem.Focused = true;
+        //    lvItem.Selected = true;
+        //}
     }
 }

@@ -2,12 +2,14 @@
 using System.IO;
 using System.Diagnostics;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
 
 namespace MyExplorer
 { 
     public partial class ExplorerForm : Form
     {
         Explorer exp;
+        string labelText;
 
         public ExplorerForm()
         {
@@ -178,13 +180,13 @@ namespace MyExplorer
             }
         }
 
-        private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cmOpen_Click(object sender, EventArgs e)
         {
             if (!ReferenceEquals(lvFiles.FocusedItem, null) && lvFiles.FocusedItem.Selected)
                 Open(lvFiles.FocusedItem.Text);
         }
 
-        private void открытьВНовомОкнеToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cmOpenInNewWindow_Click(object sender, EventArgs e)
         {
             ExplorerForm newForm = new ExplorerForm();
             if (!ReferenceEquals(lvFiles.FocusedItem, null) && lvFiles.FocusedItem.Selected)
@@ -205,12 +207,10 @@ namespace MyExplorer
                     exp.Buffer.pathColl.Add(rememberPath);
                 }
                 exp.Buffer.operation = oper;
-
-                MessageBox.Show("запомнили путь");
             }
         }
 
-        private void вырезатьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cmMove_Click(object sender, EventArgs e)
         {
             exp.Buffer.pathColl.Clear();
             RememberPathForMoveAndCopy(Operation.move);
@@ -222,7 +222,7 @@ namespace MyExplorer
             RememberPathForMoveAndCopy(Operation.copy);
         }
 
-        private void WorkWithLVAfterOperation(string pathFromBuff, string targetPath) //
+        private void WorkWithLVAfterOperation(string pathFromBuff, string targetPath, Operation oper) //
         {
             string nameItem = Info.GetPathName(pathFromBuff);
             if (ReferenceEquals(lvFiles.FocusedItem, null) || !lvFiles.FocusedItem.Selected) 
@@ -230,7 +230,7 @@ namespace MyExplorer
                 ListViewItem lvItem = Info.BuildListViewItem(lvFiles, targetPath);
                 lvItem.Selected = true;
             }
-            else if (exp.CurrentPath == pathFromBuff.Replace("\\" + nameItem, "") && exp.Buffer.operation == Operation.move)
+            else if (exp.CurrentPath == pathFromBuff.Replace("\\" + nameItem, "") && oper == Operation.move)
             {                                                         //удаление после вырезания из lisview
                 var lvItems = lvFiles.Items;
                 foreach (ListViewItem item in lvItems)
@@ -239,25 +239,26 @@ namespace MyExplorer
             }
         }
 
-        private void вставитьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cmPast_Click(object sender, EventArgs e)
         {
             try
             {
                 string target;
                 string[] lsBuff = new string[exp.Buffer.pathColl.Count];
                 exp.Buffer.pathColl.CopyTo(lsBuff);
+                Operation oper = exp.Buffer.operation;
                 if (!exp.Buffer.Empty)
                 {
                     foreach (string path in lsBuff)
                     {
                         target = Info.GetTargetPath(lvFiles, exp, path);
-                        WorkWithLVAfterOperation(path, target);
-
-                        if (exp.Buffer.operation == Operation.move)   // узнаём, какую операцию использовали;
+                       
+                        if (oper == Operation.move)   // узнаём, какую операцию использовали;
                             exp.Move(path, target);
-                        else if (exp.Buffer.operation == Operation.copy)
+                        else if (oper == Operation.copy)
                             exp.Copy(path, target);
-                    }  
+                        WorkWithLVAfterOperation(path, target, oper);
+                    }
                 }
             }
             catch (Exception exc)
@@ -286,6 +287,36 @@ namespace MyExplorer
                 }
             }
         }
+     
+        private void cmRefresh_Click(object sender, EventArgs e)
+        {
+            if (exp.CurrentPath == "\\")
+                exp.GetDriveList(lvFiles, true);
+            else
+                exp.GetCurrentDirectory(exp.CurrentPath, lvFiles, true);
+        }
+
+        private void cmRename_Click(object sender, EventArgs e)
+        {
+            ListViewItem lvItem = lvFiles.FocusedItem;
+            labelText = exp.CurrentPath + "\\" + lvItem.Text;
+            lvFiles.FocusedItem.BeginEdit();
+        }
+
+        private void lvFiles_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            string source = Info.GetPathName(labelText);
+            try
+            {
+                if (source == e.Label) return;
+                exp.Rename(labelText, e.Label);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+                e.CancelEdit = true;
+            }
+        }
 
         private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -293,20 +324,57 @@ namespace MyExplorer
             {
                 foreach (ToolStripMenuItem cm in contextMenu.Items)
                     cm.Visible = true;
-                cmRefresh.Visible = false;
                 cmCreate.Visible = false;
+                cmRefresh.Visible = false;
                 if (lvFiles.FocusedItem.SubItems[2].Text == "Файл")
+                {
                     cmOpenInNewWindow.Visible = false;
+                    cmPast.Visible = false;
+                }
+                if (lvFiles.Columns[0].Text == "Имя диска")
+                {
+                    cmRename.Visible = false;
+                    cmCut.Visible = false;
+                    cmCopy.Visible = false;
+                    cmDelete.Visible = false;
+                }
             }
             else if (ReferenceEquals(lvFiles.FocusedItem, null) || !lvFiles.FocusedItem.Selected)
             {
                 foreach (ToolStripMenuItem cm in contextMenu.Items)
                     cm.Visible = false;
-                cmPast.Visible = true;
                 cmRefresh.Visible = true;
+                cmPast.Visible = true;
                 cmCreate.Visible = true;
-                cmProperty.Visible = true;        
-            }   
+                cmProperty.Visible = true;
+                if (exp.CurrentPath == "\\") cmPast.Visible = false;
+            }
+            if (exp.CurrentPath == "\\") cmCreate.Visible = false;
+            if (exp.Buffer.Empty) cmPast.Enabled = false;
+            else cmPast.Enabled = true;
+        }
+
+        private void cmCreateFolder_Click(object sender, EventArgs e)
+        {
+            exp.Create(lvFiles, "Новая папка", 1);
+            cmRename_Click(this, e);
+        }
+
+        private void cmCreateFile_Click(object sender, EventArgs e)
+        {
+            exp.Create(lvFiles, "Новый текстовый файл", 0);
+            cmRename_Click(this, e);
+        }
+
+        private void cmProperty_Click(object sender, EventArgs e)
+        {
+            string path;
+            if (!ReferenceEquals(lvFiles.FocusedItem, null) && lvFiles.FocusedItem.Selected)
+                path = adressString.Text + "\\" + lvFiles.FocusedItem.Text;
+            else
+                path = adressString.Text;
+            Property form = new Property(true, path);
+            form.Show();
         }
     }
 }
