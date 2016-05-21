@@ -257,7 +257,7 @@ namespace MyExplorer
                             exp.Move(path, target);
                         else if (oper == Operation.copy)
                             exp.Copy(path, target);
-                        WorkWithLVAfterOperation(path, target, oper);
+                         WorkWithLVAfterOperation(path, target, oper);
                     }
                 }
             }
@@ -278,8 +278,8 @@ namespace MyExplorer
                     {
                         target = exp.CurrentPath + "\\" + lvItem.Text;
                         exp.Delete(target);
-                        lvItem.Remove();
                     }
+                    exp.GetCurrentDirectory(exp.CurrentPath, lvFiles, true);
                 }
                 catch (Exception exc)
                 {
@@ -373,8 +373,17 @@ namespace MyExplorer
                 path = adressString.Text + "\\" + lvFiles.FocusedItem.Text;
             else
                 path = adressString.Text;
-            Property form = new Property(true, path);
-            form.Show();
+            path = path.Replace("My Computer\\", "");  
+            try
+            {
+                PropertyForm form = new PropertyForm(exp, path, lvFiles, adressString);
+                form.Show();
+            }          
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+           
         }
     }
-}
+}// поток и поиск

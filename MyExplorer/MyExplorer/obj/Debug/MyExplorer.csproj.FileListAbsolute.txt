@@ -16,4 +16,4 @@ D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.csprojResolveAssemblyR
 D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.ExplorerForm.resources
 D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.Properties.Resources.resources
 D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.csproj.GenerateResource.Cache
-D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.Property.resources
+D:\course_work\MyExplorer\MyExplorer\obj\Debug\MyExplorer.PropertyForm.resources

@@ -7,7 +7,7 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace MyExplorer
 {
-    class Explorer
+    public class Explorer
     {
         private int pointCurrentPath = -1;
         private List<string> collectionPath;
@@ -18,6 +18,7 @@ namespace MyExplorer
         public string CurrentPath
         {
             get { return collectionPath[pointCurrentPath]; }
+            set { collectionPath[pointCurrentPath] = value; }
         }
 
         public Explorer()
@@ -283,25 +284,5 @@ namespace MyExplorer
             lvItem.Focused = true;
             lvItem.Selected = true;
         }
-
-        //public void CreateDirectory(ListView lvFiles)
-        //{
-        //    string str = Info.GetCountNew("Новая папка", lvFiles);
-        //    string name = CurrentPath + "\\Новая папка" + str;
-        //    Directory.CreateDirectory(name);
-        //    ListViewItem lvItem = Info.BuildListViewItem(lvFiles, name);
-        //    lvItem.Focused = true;
-        //    lvItem.Selected = true;
-        //}
-
-        //public void CreateFile(ListView lvFiles)
-        //{
-        //    string str = Info.GetCountNew("Новый текстовый файл", lvFiles);
-        //    string name = CurrentPath + "\\Новый текстовый файл" + str + ".txt";
-        //    File.CreateText(name);
-        //    ListViewItem lvItem = Info.BuildListViewItem(lvFiles, name);
-        //    lvItem.Focused = true;
-        //    lvItem.Selected = true;
-        //}
     }
 }

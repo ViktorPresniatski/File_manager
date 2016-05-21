@@ -2,9 +2,9 @@
 
 namespace MyExplorer
 {
-    enum Operation { none, move, copy }
+    public enum Operation { none, move, copy }
 
-    struct BufferFile
+    public struct BufferFile
     {
         public List<string> pathColl;
         public Operation operation;
